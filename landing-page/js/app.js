@@ -22,8 +22,7 @@
  * Define Global Variables
  * 
 */
-const nav = document.getElementById("navbar__list");
-const sections = document.querySelectorAll("section");
+
 
 /**
  * End Global Variables
@@ -40,68 +39,78 @@ const sections = document.querySelectorAll("section");
 */
 
 // build the nav
-
-const navBar = () => {
-    // create an empty container for nav items
-    let navList = '';
-    // iterate over each section element
-    sections.forEach(section => {
-
-        const navId = section.id;
-        const navDataSet = section.dataset.nav;
-
-        // append the navList
-        navList += `<li><a class="menu__link" href="#${navId}">${navDataSet}</a></li>`;
-    });
-
-    nav.innerHTML = navList;
-};
-
-navBar();
-// Add class 'active' to section when near top of viewport
-
-const rect = (section) => {
-    return Math.floor(section.getBoundingClientRect().top);
-};
-
-const removeState = (section) => {
-    section.classList.remove('your-active-class');
-};
-
-const addState = (conditional, section) => {
-    if(conditional){
-        section.classList.add('your-active-class');
+const ul = document.getElementById('navbar__list');
+console.log(ul);
+const sections = document.querySelectorAll('section')
+console.log(sections)
+const buildNav = () => {
+    for (let i = 1; i < 5; i++) {
+        let li = document.createElement('li')
+        li.innerText = `Section-${i}`;
+        li.id = `Section-${i}`  // Add a class to every Nav link matching the id of corresponding section while creating Nav bar
+        li.addEventListener('click', function (e) {
+            console.log(e.target.innerText);
+            console.dir(ul);
+            for (let elem of ul.children) {
+                elem.classList.remove('your-active-class')
+            }
+        e.target.classList.add('your-active-class')
+        for (let section of sections) {
+            console.log(`this is ${section}`)
+            section.classList.remove('your-active-class')
+        }
+        document.getElementById(e.target.innerText).classList.add('your-active-class')
+        // document.getElementById(e.target.innerText).scrollIntoView()
+        document.querySelector(`[data-nav="${e.target.innerText}"]`).scrollIntoView()
+        });
+        ul.append(li)
+            console.log(li);
     };
 };
 
-const setActive = () => {
-    sections.forEach(section => {
-        const elementRect = rect(section);
+buildNav();
 
-        visible = () => elementRect < 150 && elementRect >= -150;
+window.addEventListener('scroll', function(e) {
+    //console.log(e)
+    makeActive()
+})
 
-        removeState(section);
-        addState(visible(),section);
-    });
-};
+function makeActive() {
+    for (const section of sections) {
+      const box = section.getBoundingClientRect();
+      // You can play with the values in the "if" condition to further make it more accurate. 
+      if (box.top <= 150 && box.bottom >= 150) {
+        console.log(`${box} is in view`)
+        console.dir(section)
+        // 1. Add "your-active-class" to the current section
+        section.classList.add('your-active-class')
+        document.getElementById(section.dataset.nav).classList.add('your-active-class')
+        // 2. Add "active" class to the Nav link which have a class same as id of the current section
+      } else {
+        console.log(`${box} is not in view`)
+        // 1. Remove "your-active-class" from the current section.
+        section.classList.remove('your-active-class')
+        document.getElementById(section.dataset.nav).classList.remove('your-active-class')
+        // 2. Remove "active" class from the Nav link which have a class same as id of current section
+        
+      }
+    }
+  }
 
-window.addEventListener('scroll', setActive);
+/* Add class 'active' to section when near top of viewport
+if the section is in view then loop through the sections 
+and remove your-active-class from each section
+then add the class to the one that is in view
+and the same for the nav links
+
+loop through and remove your-active-class from 
+each nav link and add the one to the nav link that has 
+the same name as the section that is in view
+*/
 
 // Scroll to anchor ID using scrollTO event
 
-const scrollToAnchor = () => {
 
-    const navElement = document.querySelectorAll('navbar__menu a');
-    navElement.forEach(link => {
-        link.addEventListener('click', () => {
-            for(i=0; i<sections; i++) {
-                sections[i].addEventListener('click', sectionScroll(link));
-            }
-        });
-    });
-};
-
-scrollToAnchor();
 /**
  * End Main Functions
  * Begin Events
@@ -113,4 +122,3 @@ scrollToAnchor();
 // Scroll to section on link click
 
 // Set sections as active
-
