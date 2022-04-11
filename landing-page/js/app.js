@@ -42,12 +42,11 @@
 const ul = document.getElementById('navbar__list');
 console.log(ul);
 const sections = document.querySelectorAll('section')
-console.log(sections)
 const buildNav = () => {
-    for (let i = 1; i < 5; i++) {
+    for (let i = 0; i < sections.length; i++) {
         let li = document.createElement('li')
-        li.innerText = `Section-${i}`;
-        li.id = `Section-${i}`  // Add a class to every Nav link matching the id of corresponding section while creating Nav bar
+        li.innerText = `Section-${i + 1}`;
+        li.id = `Section-${i + 1}`  // Add a class to every Nav link matching the id of corresponding section while creating Nav bar
         li.addEventListener('click', function (e) {
             console.log(e.target.innerText);
             console.dir(ul);
@@ -78,9 +77,7 @@ window.addEventListener('scroll', function(e) {
 function makeActive() {
     for (const section of sections) {
       const box = section.getBoundingClientRect();
-      // You can play with the values in the "if" condition to further make it more accurate. 
       if (box.top <= 150 && box.bottom >= 150) {
-        console.log(`${box} is in view`)
         console.dir(section)
         // 1. Add "your-active-class" to the current section
         section.classList.add('your-active-class')
